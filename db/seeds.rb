@@ -7,9 +7,7 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
-Tweet.create(name: "テスト", image: "test.png")
-Tweet.create(name:'低反発テスト',image:'test2.png')
 Tweet.create!(
- name: "商品名",
- image_url:"商品の画像のリンク"
+ name: "ヒツジのいらない枕",
+ image_url:"https://thumbnail.image.rakuten.co.jp/@0_mall/33taiyo/cabinet/shironuki/imgrc0110897767.jpg"
 )
