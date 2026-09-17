@@ -9,3 +9,7 @@
 #   end
 Tweet.create(name: "テスト", image: "test.png")
 Tweet.create(name:'低反発テスト',image:'test2.png')
+Tweet.create!(
+ name: "商品名",
+ image_url:"商品の画像のリンク"
+)
