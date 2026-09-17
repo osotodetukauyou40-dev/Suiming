@@ -7,6 +7,7 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+Tweet.destroy_all
 Tweet.create!(
  name: "ヒツジのいらない枕",
  image_url:"https://thumbnail.image.rakuten.co.jp/@0_mall/33taiyo/cabinet/shironuki/imgrc0110897767.jpg"
