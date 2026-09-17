@@ -1,0 +1,21 @@
+<h1>マイページ</h1>
+<h2>お気に入り一覧</h2>
+
+<% if @bookmarks.any? %>
+ <div class="tweets-container">
+  <% @bookmarks.each do |b| %>
+   <div class="tweet">
+    <%= link_to tweet_path(b.tweet) do %>
+     <% if b.tweet.image_url.present?%>
+      <%= image_tag b.tweet.image_url %>
+     <% else %>
+      <p>No image</p>
+     <% end %>
+     <p><%= b.tweet.name.presence || "商品名未設定" %></p>
+    <% end %>
+   </div>
+  <% end %>
+ </div>
+<% else %>
+ <p>お気に入り登録した商品はまだありません。</p>
+<% end %>

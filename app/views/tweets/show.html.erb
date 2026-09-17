@@ -1,0 +1,93 @@
+<% if @tweet.image_url.present? %>
+  <%= image_tag @tweet.image_url, size:'300*300'%>
+<% else %>
+  <p>No Image</p>
+<% end %>
+
+<h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 15px; text-align: center;">
+    <%= @tweet.name %>
+ </h1>
+
+<div class="star-rating-summary">
+  <span class="star-icon">★</span>
+  <span class="star-average"><%= @tweet.stars.average(:score)&.round(1) || "0.0" %></span>
+  <span class="star-count">(<%= @tweet.stars.count %>件)</span>
+</div>
+
+<% if user_signed_in? %>
+ <% if current_user.bookmarks.exists?(tweet_id: @tweet.id) %>
+  <%= button_to'♥ お気に入り解除',tweet_bookmark_path(@tweet),method: :delete%>
+ <% else %>
+  <%= button_to'♡ お気に入り登録',tweet_bookmarks_path(@tweet),method: :post%>
+ <% end %>
+<% else %>
+ <p>※ お気に入り機能を利用するにはログインが必要です</p>
+<% end %>
+
+<% if @tweet.links.any? %>
+ <div class="purchase-links-container" style="margin-top: 20px;">
+  <h4>購入・関連サイト</h4>
+  <div class="shop-buttons" style="display: flex; gap: 10px; flex-wrap: wrap;">
+   <% @tweet.links.each do |link| %>
+    <%= link_to link.site_name, link.url, target: "_blank", rel: "noopener", class: "btn-link", style: "padding: 10px 18px; background: #333; color: white; border-radius: 4px; text-decoration: none; font-weight: bold;" %>
+   <% end %>
+  </div>
+ </div>
+<% end %>
+
+<% if user_signed_in? %>
+  <div class="star-form-container">
+    <p class="star-form-title">☆をつける</p>
+
+    <% star = @tweet.stars.find_by(user_id: current_user.id) %>
+    
+    <%= form_with(model: [@tweet, @tweet.stars.find_or_initialize_by(user_id: current_user.id)], local: true) do |f| %>
+      <div class="star-rating-select">
+        <% [5, 4, 3, 2, 1].each do |num| %>
+         <%= f.radio_button :score, num, id: "star_#{num}", class: "star-radio", checked: (f.object.score == num) %>
+        <label for="star_<%= num %>" class="star-label">★<%= num %></label>
+        <% end %>
+      </div>
+
+      <%= f.submit "送信", class: "star-submit-btn" %>
+    <% end %>
+
+    <% if star %>
+      <%= button_to "評価を取消", tweet_star_path(@tweet, star), method: :delete, class: "star-delete-btn" %>
+    <% end %>
+
+  </div>
+<% end %>
+
+<h3>レビュー一覧</h3>
+<% if @reviews.any? %>
+  <% @reviews.each do |review| %>
+    <p><%= review.content %></p>
+    <small><%= review.created_at.strftime('%Y/%m/%d %H:%M') %></small>
+
+    <% if user_signed_in? && review.user == current_user %>
+      <details>
+        <summary style="cursor: pointer; display: inline-block;">編集</summary>
+        <%= form_with(model: [@tweet, review], local: true) do |f| %>
+          <%= f.text_area :content, size: "30x2" %><br>
+          <%= f.submit "更新" %>
+        <% end %>
+      </details>
+
+      <div style="display: inline-block;">
+        <%= button_to '削除', tweet_review_path(@tweet, review), method: :delete %>
+      </div>
+    <% end %>
+    <hr>
+  <% end %>
+<% else %>
+  <p>まだレビューはありません。</p>
+<% end %>
+
+<% if user_signed_in? %>
+  <h3>新規レビュー投稿</h3>
+  <%= form_with(model: [@tweet, @review], local: true) do |f| %>
+    <%= f.text_area :content, size: "30x2" %><br>
+    <%= f.submit "投稿する" %>
+  <% end %>
+<% end %>

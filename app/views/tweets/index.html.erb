@@ -1,0 +1,25 @@
+<div class="search-form-container">
+ <%= form_with(url:tweets_path, method: :get, local:true)do |f| %>
+  <%= f.text_field :keyword, value: params[:keyword], placeholder:"商品を検索..."%>
+  <%= f.submit'検索' %>
+ <% end %>
+</div>
+
+<h3>商品一覧</h3>
+<div class="tweets-container">
+  <% @tweet.each do |t| %>
+    <div class="tweet">
+      <%= link_to tweet_path(t) do %>
+        
+        <% if t.image_url.present? %>
+         <%= image_tag t.image_url %>
+        <% else %>
+         <p>No Image</p>
+        <% end %>
+
+        <p><%= t.name.presence || "商品名未設定" %></p>
+
+      <% end %>
+    </div>
+  <% end %>
+</div>
