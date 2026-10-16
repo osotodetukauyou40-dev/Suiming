@@ -66,4 +66,4 @@ group :production do
 
 end
 
-gem "json", "< 3.0"
+gem "json", "< 4.0"
